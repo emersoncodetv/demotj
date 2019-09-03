@@ -9,6 +9,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Title from "./Title";
+import prettydate from "pretty-date";
 
 import { useEffect, useState } from "react";
 
@@ -63,7 +64,7 @@ export default function Orders(props) {
         <TableBody>
           {rows.map(row => (
             <TableRow key={row.cliente_id}>
-              <TableCell>{row.fecha}</TableCell>
+              <TableCell>{prettydate.format(new Date(row.fecha))}</TableCell>
               <TableCell>{row.cliente}</TableCell>
               <TableCell>{row.ultima_compra}</TableCell>
               <TableCell>{row.siguiente_posible_compra}</TableCell>
