@@ -6,6 +6,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import gql from "graphql-tag";
+import axios from "axios";
 
 import names from "starwars-names";
 var randomName = names.random();
@@ -18,20 +19,54 @@ const MUTATION = gql`
   }
 `;
 
-console.log(randomName);
+function shuffle(array) {
+  var currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+// Used like so
+var triggerCompra = ["Zara", "Don Jediondo", "Adidas kids", "Yogen Fruz"];
+// arr = shuffle(arr);
+// console.log(arr);
+// console.log(randomName);
 
 export const MainListItems = props => {
   const [similarVenta] = useMutation(MUTATION);
   const handleClick = useCallback(() => {
-    similarVenta({
-      variables: {
-        nuevo_cliente: {
-          siguiente_posible_compra: "Postres y Postres",
-          ultima_compra: "Don Jediondo",
-          cliente: "David"
-        }
-      }
-    });
+    let arr = shuffle(triggerCompra);
+    axios
+      .post("http://129.213.97.187:3000/nextBuy", {
+        buy: arr[0]
+      })
+      .then(function(response) {
+        similarVenta({
+          variables: {
+            nuevo_cliente: {
+              siguiente_posible_compra: response.data.title["1"],
+              ultima_compra: arr[0],
+              cliente: names.random()
+            }
+          }
+        });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   });
   return (
     <div>

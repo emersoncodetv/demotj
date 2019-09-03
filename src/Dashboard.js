@@ -148,7 +148,7 @@ export default function Dashboard(props) {
             noWrap
             className={classes.title}
           >
-            Motor de Machine Learning en tiempo real | Augmented Sales
+            Augmented Sales
           </Typography>
           {/* <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">

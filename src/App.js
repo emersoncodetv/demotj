@@ -7,7 +7,7 @@ import gql from "graphql-tag";
 
 const COMMENTS_SUBSCRIPTION = gql`
   subscription {
-    cliente1 {
+    cliente1(order_by: { fecha: desc }) {
       cliente_id
       cliente
       fecha
@@ -32,7 +32,7 @@ function DontReadTheComments({ repoFullName }) {
     }
   });
 
-  console.log(data);
+  // console.log(data);
   return !loading && <Dashboard clientes={data.cliente1} />;
 }
 
