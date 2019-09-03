@@ -10,7 +10,9 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Title from "./Title";
 import prettydate from "pretty-date";
-
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import IconButton from "@material-ui/core/IconButton";
+import Badge from "@material-ui/core/Badge";
 import { useEffect, useState } from "react";
 
 // Generate Order Data
@@ -46,7 +48,7 @@ export default function Orders(props) {
     // document.title = props.clientes.length;
     // console.log(props.clientes);
     setRows(props.clientes);
-  }, [props.clientes.length]);
+  }, [JSON.stringify(props.clientes)]);
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -58,7 +60,14 @@ export default function Orders(props) {
             <TableCell>Cliente</TableCell>
             <TableCell>Ultima Compra</TableCell>
             <TableCell>Siguiente Posible Compra</TableCell>
-            {/* <TableCell align="right">Sale Amount</TableCell> */}
+            <TableCell align="right">Probabilidad</TableCell>
+            <TableCell align="right">
+              <IconButton color="inherit">
+                <Badge badgeContent={""} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -68,7 +77,8 @@ export default function Orders(props) {
               <TableCell>{row.cliente}</TableCell>
               <TableCell>{row.ultima_compra}</TableCell>
               <TableCell>{row.siguiente_posible_compra}</TableCell>
-              {/* <TableCell align="right">{row.amount}</TableCell> */}
+              <TableCell align="right">{Math.trunc(row.probabilidad * 100)}%</TableCell>
+              <TableCell align="right">{row.notificacion}</TableCell>
             </TableRow>
           ))}
         </TableBody>

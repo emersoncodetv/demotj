@@ -19,6 +19,14 @@ const MUTATION = gql`
   }
 `;
 
+const NOTIFICATION = gql`
+  mutation nuevo_notificacion($notificacion: [notificacion_insert_input!]!) {
+    insert_notificacion(objects: $notificacion) {
+      affected_rows
+    }
+  }
+`;
+
 function shuffle(array) {
   var currentIndex = array.length,
     temporaryValue,
@@ -40,13 +48,15 @@ function shuffle(array) {
 }
 
 // Used like so
-var triggerCompra = ["Zara", "Don Jediondo", "Adidas kids", "Yogen Fruz"];
+var triggerCompra = ["Zara", "Don Jediondo", "Adidas kids", "Yogen Fruz", "Crepes and Waffles"];
 // arr = shuffle(arr);
 // console.log(arr);
 // console.log(randomName);
 
 export const MainListItems = props => {
   const [similarVenta] = useMutation(MUTATION);
+  const [sendNotification] = useMutation(NOTIFICATION);
+
   const handleClick = useCallback(() => {
     let arr = shuffle(triggerCompra);
     axios
@@ -59,10 +69,22 @@ export const MainListItems = props => {
             nuevo_cliente: {
               siguiente_posible_compra: response.data.title["1"],
               ultima_compra: arr[0],
-              cliente: names.random()
+              cliente: names.random(),
+              probabilidad: response.data.cosine_sim["1"],
+              notificacion: response.data.cosine_sim["1"] > 0.9 ? "SMS" : ""
             }
           }
         });
+
+        if (response.data.cosine_sim["1"] > 0.9) {
+          sendNotification({
+            variables: {
+              notificacion: {
+                notificacion: "SMS"
+              }
+            }
+          });
+        }
       })
       .catch(function(error) {
         console.log(error);

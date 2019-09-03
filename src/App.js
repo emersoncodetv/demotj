@@ -7,12 +7,14 @@ import gql from "graphql-tag";
 
 const COMMENTS_SUBSCRIPTION = gql`
   subscription {
-    cliente1(order_by: { fecha: desc }) {
+    cliente1(order_by: { fecha: desc }, limit: 15) {
       cliente_id
       cliente
       fecha
       siguiente_posible_compra
       ultima_compra
+      notificacion
+      probabilidad
     }
   }
 `;
